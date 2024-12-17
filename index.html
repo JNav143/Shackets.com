@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/style.css">
+  <title>Sign In - Shackets.com</title>
+  <style>
+
+  </style>
+</head>
+
+<body>
+  <div class="auth-container">
+    <h1 class="login">Log In</h1>
+    <button id="signInButton"><img src="/IMG/google.png" class="google"></button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCLNzGCjCcUqgCDbQWbqZCZ-0xl5I1I5pA",
+      authDomain: "shackets01.firebaseapp.com",
+      projectId: "shackets01",
+      storageBucket: "shackets01.firebasestorage.app",
+      messagingSenderId: "384746154646",
+      appId: "1:384746154646:web:be7545d3c0693c9c5670b7",
+      measurementId: "G-S8KH0JG1D8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const provider = new GoogleAuthProvider();
+
+    const signInButton = document.getElementById("signInButton");
+    const message = document.getElementById("message");
+    const userName = document.getElementById("userName");
+    const userEmail = document.getElementById("userEmail");
+
+    const userSignIn = async () => {
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Update the UI immediately
+        message.style.display = "block";
+        userName.innerHTML = user.displayName;
+        userEmail.innerHTML = user.email;
+
+        // Redirect to the home page
+        window.location.href = "/shackets.html"; // Replace with your home page URL
+      } catch (error) {
+        console.error(`Error ${error.code}: ${error.message}`);
+      }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        message.style.display = "block";
+        userName.innerHTML = user.displayName;
+        userEmail.innerHTML = user.email;
+      } else {
+        message.style.display = "none";
+      }
+    });
+
+    signInButton.addEventListener('click', userSignIn);
+  </script>
+</body>
+
+</html>
